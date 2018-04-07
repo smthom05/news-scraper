@@ -31,9 +31,8 @@ app.use(express.static("public"));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/week18Populater", {
-  useMongoClient: true
-});
+mongoose.connect("mongodb://localhost/sports-news_db",{})
+
 
 // Routes
 
@@ -55,7 +54,7 @@ app.get("/scrape", function(req, res) {
         .text();
 
       result.summary = $(this)
-        .children("story")
+        .find("p.contentItem__subhead--story")
         .text();
 
       result.link = $(this)
@@ -114,7 +113,7 @@ app.get("/articles/:id", function(req, res) {
 // Route for saving/updating an Article's associated Comment
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
-  db.Note
+  db.Comment
     .create(req.body)
     .then(function(dbNote) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
